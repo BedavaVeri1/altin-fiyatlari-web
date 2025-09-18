@@ -151,3 +151,32 @@ body {
 .multiplier-group label{font-size:.9em;color:var(--font-color-secondary)}
 .multiplier-group input{padding:10px;border:1px solid var(--border-color);border-radius:6px;background-color:var(--background-color);color:var(--font-color);font-size:1em}
 #save-multipliers{margin-top:2rem;padding:12px 25px;border:none;border-radius:6px;background-color:var(--primary-color);color:#121212;font-weight:700;cursor:pointer;transition:background-color .3s;display:block;width:100%;font-size:1rem}
+/* =============================================== */
+/* MOBİL CİHAZLAR İÇİN DİKEY TASARIM DÜZENLEMELERİ */
+/* =============================================== */
+
+@media (max-width: 600px) {
+
+    /* 1. Üstteki Tarih/Saat ve Yenileme Alanını Düzeltme */
+    .sub-header {
+        flex-direction: column; /* Öğeleri alt alta sırala */
+        align-items: flex-start; /* Sola hizala */
+        gap: 0.8rem; /* Aralarına boşluk koy */
+    }
+
+    /* 2. Çarpan Ayarları Panelini Dikey Hale Getirme */
+    .multiplier-inputs-container {
+        flex-direction: column; /* Alış ve Satış kutularını alt alta sırala */
+    }
+
+    /* Mobil için liste yazı boyutlarını biraz küçültelim */
+    .gold-list-item .col-birim,
+    .gold-list-item .col-alis,
+    .gold-list-item .col-satis {
+        font-size: 1.1rem;
+    }
+    
+    .list-header {
+        font-size: 0.8rem;
+    }
+}
