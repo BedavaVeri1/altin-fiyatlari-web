@@ -1,11 +1,15 @@
 const CACHE_NAME = 'altin-fiyatlari-v1';
 // Çevrimdışı modda çalışması için önbelleğe alınacak dosyaların listesi
+// ÖRNEK: Deponuzun adı "altin-fiyatlari-web" ise
+const repoName = '/altin-fiyatlari-web'; 
+
 const urlsToCache = [
-  '/',
-  'index.html',
-  'style.css',
-  'script.js',
-  'logo.png'
+  `${repoName}/`,
+  `${repoName}/index.html`,
+  `${repoName}/style.css`,
+  `${repoName}/script.js`,
+  `${repoName}/logo.png`,
+  `${repoName}/manifest.json`
 ];
 
 // 1. Yükleme (Install) adımı: Dosyaları önbelleğe al

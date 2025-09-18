@@ -2,7 +2,7 @@
   "name": "Anlık Altın Fiyatları",
   "short_name": "Altın Fiyatları",
   "description": "Canlı ve güncel altın fiyatlarını takip edin.",
-  "start_url": "/index.html",
+  "start_url": "/altin-fiyatlari-web/index.html",
   "display": "standalone",
   "background_color": "#f4f7f6",
   "theme_color": "#D4AF37",
