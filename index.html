@@ -12,31 +12,31 @@
 <body>
 
     <div class="container">
-        <header>
+        <header class="main-header">
+            <button id="toggle-settings" class="icon-button" title="Ayarlar"><i class="fas fa-cog"></i></button>
+            <img src="logo.png" alt="Firma Logosu" class="header-logo">
+            <button id="toggle-fullscreen" class="icon-button" title="Tam Ekran"><i class="fas fa-expand"></i></button>
+        </header>
+
+        <div class="sub-header">
             <div id="date-time-container">
                 <span id="current-date"></span>
                 <span id="current-time"></span>
             </div>
-            <div class="controls">
-                <div class="refresh-info">
-                    <span id="last-updated"></span>
-                    <span id="refresh-timer"></span>
-                    <button id="manual-refresh" class="icon-button" title="Yenile"><i id="refresh-icon" class="fas fa-sync-alt"></i></button>
-                </div>
-                <div class="header-icons">
-                    <button id="toggle-settings" class="icon-button" title="Ayarlar"><i class="fas fa-cog"></i></button>
-                    <button id="toggle-fullscreen" class="icon-button" title="Tam Ekran"><i class="fas fa-expand"></i></button>
-                </div>
+            <div class="refresh-info">
+                <span id="last-updated"></span>
+                <span id="refresh-timer"></span>
+                <button id="manual-refresh" class="icon-button" title="Yenile"><i id="refresh-icon" class="fas fa-sync-alt"></i></button>
             </div>
-        </header>
-
-        <div class="title-container">
-            <img src="logo.png" alt="Firma Logosu" class="logo logo-left">
-            <h1>Anlık Altın Fiyatları</h1>
-            <img src="logo.png" alt="Firma Logosu" class="logo logo-right">
         </div>
 
-        <div id="gold-prices-grid">
+        <div class="list-header">
+            <span class="col-birim">Birim</span>
+            <span class="col-alis">Alış</span>
+            <span class="col-satis">Satış</span>
+        </div>
+
+        <div id="gold-prices-list" class="gold-list-container">
             </div>
     </div>
 
@@ -46,26 +46,11 @@
                 <h2>Fiyat Çarpan Ayarları</h2>
                 <button id="close-settings" class="icon-button" title="Kapat"><i class="fas fa-times"></i></button>
             </div>
-            <div id="multiplier-settings-grid">
-                </div>
+            <div id="multiplier-settings-grid"></div>
             <button id="save-multipliers">Çarpanları Kaydet</button>
         </div>
     </div>
 
     <script src="script.js"></script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker başarıyla kaydedildi: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker kaydı başarısız: ', error);
-                    });
-            });
-        }
-    </script>
-    </body>
+</body>
 </html>
