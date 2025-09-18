@@ -38,41 +38,38 @@ document.addEventListener('DOMContentLoaded', function() {
     let countdownSeconds = 30;
     let refreshInterval;
 
-    async function fetchGoldPrices() {
-        refreshIcon.classList.add('spinning');
-        if (!pricesGrid.innerHTML || pricesGrid.innerText.includes("Veri çekilemedi")) {
-            pricesGrid.innerHTML = '<p style="text-align:center;">Fiyatlar yükleniyor...</p>';
-        }
-
-        const RAPIDAPI_KEY = 'KEYYY'; // LÜTFEN KENDİ ANAHTARINIZI GİRİN
-        const RAPIDAPI_HOST = 'harem-altin-live-gold-price-data.p.rapidapi.com';
-        const apiUrl = 'https://harem-altin-live-gold-price-data.p.rapidapi.com/harem_altin/prices';
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: { 'X-RapidAPI-Key': RAPIDAPI_KEY, 'X-RapidAPI-Host': RAPIDAPI_HOST }
-            });
-            if (!response.ok) throw new Error(`API Hatası! Durum: ${response.status}`);
-            const result = await response.json();
-            const hasAltin = result.data.find(item => item.key === 'Has Altın');
-            if (!hasAltin) throw new Error('API yanıtında "Has Altın" verisi bulunamadı.');
-            
-            const baseBuy = parseFloat(hasAltin.buy.replace(/\./g, '').replace(',', '.'));
-            const baseSell = parseFloat(hasAltin.sell.replace(/\./g, '').replace(',', '.'));
-
-            renderPrices(baseBuy, baseSell);
-            lastUpdatedSpan.textContent = `Son Güncelleme: ${new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-            startRefreshTimer();
-        } catch (error) {
-            console.error('Veri çekme hatası:', error);
-            pricesGrid.innerHTML = `<p style="text-align:center; color: red;">Veri çekilemedi. API anahtarınızı kontrol edin.</p>`;
-            clearInterval(refreshInterval);
-            refreshTimerSpan.textContent = "Hata!";
-        } finally {
-            refreshIcon.classList.remove('spinning');
-        }
+    // --- SİMÜLASYONLU FİYAT GETİRME FONKSİYONU ---
+async function fetchGoldPrices() {
+    // 1. Yükleme animasyonunu başlatalım
+    refreshIcon.classList.add('spinning');
+    if (!document.getElementById('gold-prices-list').innerHTML) {
+        document.getElementById('gold-prices-list').innerHTML = '<p style="text-align:center; padding: 2rem;">Fiyatlar simüle ediliyor...</p>';
     }
+
+    // 2. 1.5 saniyelik sahte bir ağ gecikmesi yaratalım
+    setTimeout(() => {
+        // 3. Rastgele ama gerçekçi temel fiyatlar üretelim
+        // Gerçekçi bir temel fiyat belirleyelim (örneğin 2400 TL)
+        const basePrice = 2400; 
+        // Fiyatta küçük bir dalgalanma yaratmak için rastgele bir sayı ekleyelim (-20 ile +20 arası)
+        const fluctuation = (Math.random() - 0.5) * 40; 
+        
+        const simulatedBuyPrice = basePrice + fluctuation;
+        // Alış ve Satış arasında küçük bir fark olsun
+        const simulatedSellPrice = simulatedBuyPrice + 15; 
+
+        console.log(`Simüle Edilen Fiyatlar -> Alış: ${simulatedBuyPrice.toFixed(2)}, Satış: ${simulatedSellPrice.toFixed(2)}`);
+
+        // 4. Mevcut render fonksiyonumuzu bu sahte verilerle çağıralım
+        renderPrices(simulatedBuyPrice, simulatedSellPrice);
+
+        // 5. Simülasyon bittiğinde arayüzü güncelleyelim
+        lastUpdatedSpan.textContent = `Son Simülasyon: ${new Date().toLocaleTimeString('tr-TR')}`;
+        startRefreshTimer(); // Geri sayımı yeniden başlat
+        refreshIcon.classList.remove('spinning'); // Yükleme animasyonunu durdur
+
+    }, 1500); // 1500 milisaniye = 1.5 saniye bekle
+}
     
     // --- BU FONKSİYON GÜNCELLENDİ ---
     function renderPrices(baseBuy, baseSell) {
