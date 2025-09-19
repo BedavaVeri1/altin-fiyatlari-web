@@ -88,39 +88,35 @@ async function fetchGoldPrices() {
         }
     } // renderPrices fonksiyonunun kapanış parantezi
     
-    // --- BU FONKSİYON GÜNCELLENDİ ---
-    function renderPrices(baseBuy, baseSell) {
+function renderPrices(baseBuy, baseSell) {
     const pricesList = document.getElementById('gold-prices-list');
     pricesList.innerHTML = '';
     const newPrices = {};
 
     goldTypes.forEach(gold => {
         const currentMultipliers = multipliers[gold.key];
-
         const rawBuy = baseBuy * currentMultipliers.buy;
         const rawSell = baseSell * currentMultipliers.sell;
-
         const roundedBuy = Math.ceil(rawBuy);
         const roundedSell = Math.ceil(rawSell);
-
         let displayBuy = roundedBuy === 0 ? '—' : `${roundedBuy.toLocaleString('tr-TR')}`;
         let displaySell = roundedSell === 0 ? '—' : `${roundedSell.toLocaleString('tr-TR')}`;
-
         let buyChangeIndicator = '';
         let sellChangeIndicator = '';
 
         if (roundedBuy !== 0 && Object.keys(previousPrices).length > 0) {
             const prevBuy = parseFloat(previousPrices[gold.key]?.buy);
-            if (prevBuy < roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-arrow-up"></i></span>';
-            if (prevBuy > roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-arrow-down"></i></span>';
+            // İkonları değiştir (fa-caret-up / fa-caret-down)
+            if (prevBuy < roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
+            if (prevBuy > roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-caret-down"></i></span>';
         }
         if (roundedSell !== 0 && Object.keys(previousPrices).length > 0) {
             const prevSell = parseFloat(previousPrices[gold.key]?.sell);
-            if (prevSell < roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-arrow-up"></i></span>';
-            if (prevSell > roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-arrow-down"></i></span>';
+            // İkonları değiştir (fa-caret-up / fa-caret-down)
+            if (prevSell < roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
+            if (prevSell > roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-caret-down"></i></span>';
         }
         
-        // Yeni liste satırı HTML'i
         const itemHTML = `
             <div class="gold-list-item">
                 <span class="col-birim">${gold.name}</span>
@@ -129,11 +125,13 @@ async function fetchGoldPrices() {
             </div>
         `;
         pricesList.innerHTML += itemHTML;
-
         newPrices[gold.key] = { buy: roundedBuy.toFixed(2), sell: roundedSell.toFixed(2) };
     });
 
     previousPrices = newPrices;
+    if(converterOverlay.classList.contains('visible')) {
+        calculateConversion();
+    }
 }
 
     function initializeMultipliers() {
@@ -211,13 +209,14 @@ async function fetchGoldPrices() {
 
     // 1. Dropdown menüsünü goldTypes dizisindeki verilerle doldur
     function populateConverterDropdown() {
-        goldTypes.forEach(gold => {
-            const option = document.createElement('option');
-            option.value = gold.key;
-            option.textContent = gold.name;
-            goldSelect.appendChild(option);
-        });
-    }
+    goldSelect.innerHTML = ''; // BU SATIRI EKLE - Listeyi her seferinde temizle
+    goldTypes.forEach(gold => {
+        const option = document.createElement('option');
+        option.value = gold.key;
+        option.textContent = gold.name;
+        goldSelect.appendChild(option);
+    });
+}
 
     // 2. Hesaplama fonksiyonu
     function calculateConversion() {

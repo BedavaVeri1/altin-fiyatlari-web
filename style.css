@@ -244,3 +244,15 @@ body {
 .main-header .icon-button {
     font-size: 1.5rem;
 }
+/* Header ikonlarını gruplamak için yeni stil */
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* Klavye sorununu çözmek için: Paneli ortaya değil, üste hizala */
+.settings-overlay.visible {
+    align-items: flex-start;
+    padding-top: 5vh; /* Ekranın biraz altında başlasın */
+}
