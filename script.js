@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Eğer giriş yapılmamışsa, şifre sor
-        const adminPassword = "sifre1234"; // Buraya kendi gizli şifrenizi yazın
+        const adminPassword = "bizim6'ncı"; // Buraya kendi gizli şifrenizi yazın
         const enteredPassword = prompt("Yönetici paneline erişmek için şifreyi girin:");
 
         // Şifre doğruysa...
