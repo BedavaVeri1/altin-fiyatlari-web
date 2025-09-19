@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Veri temizleme işlemi iptal edildi.');
     }
 });
-
     // --- UYGULAMAYI BAŞLATAN FONKSİYONLAR ---
     initializeMultipliers();
     fetchGoldPrices();
