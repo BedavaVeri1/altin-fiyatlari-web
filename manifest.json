@@ -1,6 +1,6 @@
 {
   "name": "Anlık Altın Fiyatları",
-  "short_name": "Altın Fiyatları",
+  "short_name": "Bizim 6'ncı",
   "description": "Canlı ve güncel altın fiyatlarını takip edin.",
   "start_url": "/altin-fiyatlari-web/index.html",
   "display": "standalone",
@@ -8,14 +8,16 @@
   "theme_color": "#D4AF37",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "/altin-fiyatlari-web/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "logo.png",
+      "src": "/deponuzun-adi/logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
