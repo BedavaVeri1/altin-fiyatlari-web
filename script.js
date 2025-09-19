@@ -4,9 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'HAS_ALTIN', name: 'HAS ALTIN', defaultBuy: 0.995 , defaultSell: 1.005 },
         { key: 'GRAM_ALTIN', name: 'GRAM ALTIN', defaultBuy: 0.911, defaultSell: 0.940 },
         { key: '22_AYAR', name: '22 AYAR', defaultBuy: 0.911, defaultSell: 0.935 },
-        { key: '18_AYAR', name: '18 AYAR', defaultBuy: 0.715, defaultSell: 0.760 },
-        { key: '14_AYAR', name: '14 AYAR', defaultBuy: 0.560, defaultSell: 0.595 },
-        { key: '8_AYAR', name: '8 AYAR', defaultBuy: 0.300, defaultSell: 0.343 },
+        { key: '18_AYAR', name: '18 AYAR', defaultBuy: 0.715, defaultSell: 0. },
+        { key: '14_AYAR', name: '14 AYAR', defaultBuy: 0.560, defaultSell: 0. },
+        { key: '8_AYAR', name: '8 AYAR', defaultBuy: 0.300, defaultSell: 0. },
         { key: 'CEYREK_ALTIN', name: 'ÇEYREK ALTIN', defaultBuy: 1.5960, defaultSell: 1.64 },
         { key: 'YARIM_ALTIN', name: 'YARIM ALTIN', defaultBuy: 3.202, defaultSell: 3.28 },
         { key: 'TAM_ALTIN', name: 'TAM ALTIN', defaultBuy: 6.405, defaultSell: 6.56 },
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullscreenButton = document.getElementById('toggle-fullscreen');
     const settingsOverlay = document.getElementById('settings-overlay');
     const lastUpdatedSpan = document.getElementById('last-updated');
+    const clearDataButton = document.getElementById('clear-data-button');
 
     let previousPrices = {};
     let multipliers = {};
@@ -262,3 +263,42 @@ function renderPrices(baseBuy, baseSell) {
     // Dropdown'ı sayfa yüklendiğinde doldur
     populateConverterDropdown();
 });
+// --- UYGULAMA VERİLERİNİ TEMİZLEME FONKSİYONELLİĞİ ---
+    clearDataButton.addEventListener('click', () => {
+        // Kullanıcıya emin olup olmadığını soralım
+        const isConfirmed = confirm('Emin misiniz? Kayıtlı çarpanlar dahil tüm uygulama verileri silinecek ve sayfa yenilenecektir. Bu işlem geri alınamaz.');
+
+        if (isConfirmed) {
+            console.log('Veri temizleme işlemi başlatıldı...');
+            
+            // 1. Service Worker kaydını sil
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker kaydı silindi.');
+                    }
+                });
+            }
+
+            // 2. Tüm önbelleği (cache) temizle
+            if (window.caches) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                        console.log(`'${name}' isimli önbellek silindi.`);
+                    }
+                });
+            }
+
+            // 3. Kayıtlı çarpanları (localStorage) temizle
+            localStorage.clear();
+            console.log('localStorage temizlendi.');
+
+            // 4. Kullanıcıyı bilgilendir ve sayfayı yeniden yükle
+            alert('Tüm uygulama verileri başarıyla temizlendi. Sayfa şimdi yeniden yüklenecek.');
+            window.location.reload();
+        } else {
+            console.log('Veri temizleme işlemi iptal edildi.');
+        }
+    });
