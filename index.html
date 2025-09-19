@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anlık Altın Fiyatları</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#D4AF37">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <div class="container">
         <header class="main-header">
-    <img src="logo.png" alt="Firma Logosu" class="header-logo">
-    <div class="header-icons">
-    <button id="toggle-settings" class="icon-button" title="Ayarlar"><i class="fas fa-cog"></i></button>
-    <button id="toggle-converter" class="icon-button" title="Çevirici"><i class="fas fa-calculator"></i></button>
-    <button id="toggle-fullscreen" class="icon-button" title="Tam Ekran"><i class="fas fa-expand"></i></button>
-    <button id="clear-data-button" class="icon-button" title="Uygulama Verilerini Temizle"><i class="fas fa-trash-alt"></i></button>
-</div>  
-</header>
+            <img src="logo.png" alt="Firma Logosu" class="header-logo">
+            <div class="header-icons">
+                <button id="toggle-settings" class="icon-button" title="Ayarlar"><i class="fas fa-cog"></i></button>
+                <button id="toggle-converter" class="icon-button" title="Çevirici"><i class="fas fa-calculator"></i></button>
+                <button id="toggle-fullscreen" class="icon-button" title="Tam Ekran"><i class="fas fa-expand"></i></button>
+                <button id="clear-data-button" class="icon-button" title="Uygulama Verilerini Temizle"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </header>
+
         <div class="sub-header">
             <div id="date-time-container">
                 <span id="current-date"></span>
@@ -53,7 +54,6 @@
             <button id="save-multipliers">Çarpanları Kaydet</button>
         </div>
     </div>
-</div>
 
     <div id="converter-overlay" class="settings-overlay">
         <div class="settings-panel">
@@ -68,8 +68,7 @@
                 </div>
                 <div class="converter-input-group">
                     <label for="gold-select-dropdown">Birim</label>
-                    <select id="gold-select-dropdown">
-                        </select>
+                    <select id="gold-select-dropdown"></select>
                 </div>
                 <div class="converter-results">
                     <div class="result-box">
@@ -84,6 +83,7 @@
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

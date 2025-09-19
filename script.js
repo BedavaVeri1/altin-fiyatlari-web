@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // HATA 3 DÜZELTİLDİ: Eksik defaultSell değerleri tamamlandı.
     const goldTypes = [
         { key: 'HAS_ALTIN', name: 'HAS ALTIN', defaultBuy: 0.995, defaultSell: 1.005 },
         { key: 'GRAM_ALTIN', name: 'GRAM ALTIN', defaultBuy: 0.911, defaultSell: 0.940 },
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'BESLI_ALTIN', name: '5\'Lİ ALTIN', defaultBuy: 33.00, defaultSell: 34.50 },
     ];
 
-    // --- Tüm element seçicileri bir arada ---
     const settingsGrid = document.getElementById('multiplier-settings-grid');
     const refreshTimerSpan = document.getElementById('refresh-timer');
     const manualRefreshButton = document.getElementById('manual-refresh');
@@ -46,22 +44,17 @@ document.addEventListener('DOMContentLoaded', function() {
     let countdownSeconds = 30;
     let refreshInterval;
 
-    // --- SİMÜLASYONLU FİYAT GETİRME FONKSİYONU ---
     async function fetchGoldPrices() {
         refreshIcon.classList.add('spinning');
         if (!document.getElementById('gold-prices-list').innerHTML) {
             document.getElementById('gold-prices-list').innerHTML = '<p style="text-align:center; padding: 2rem;">Fiyatlar simüle ediliyor...</p>';
         }
-
         setTimeout(() => {
             const basePrice = 2400;
             const fluctuation = (Math.random() - 0.5) * 40;
             const simulatedBuyPrice = basePrice + fluctuation;
             const simulatedSellPrice = simulatedBuyPrice + 15;
-
-            console.log(`Simüle Edilen Fiyatlar -> Alış: ${simulatedBuyPrice.toFixed(2)}, Satış: ${simulatedSellPrice.toFixed(2)}`);
             renderPrices(simulatedBuyPrice, simulatedSellPrice);
-
             lastUpdatedSpan.textContent = `Son Simülasyon: ${new Date().toLocaleTimeString('tr-TR')}`;
             startRefreshTimer();
             refreshIcon.classList.remove('spinning');
@@ -72,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const pricesList = document.getElementById('gold-prices-list');
         pricesList.innerHTML = '';
         const newPrices = {};
-
         goldTypes.forEach(gold => {
             const currentMultipliers = multipliers[gold.key];
             const rawBuy = baseBuy * currentMultipliers.buy;
@@ -81,11 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const roundedSell = Math.ceil(rawSell);
             let displayBuy = roundedBuy === 0 ? '—' : `${roundedBuy.toLocaleString('tr-TR')}`;
             let displaySell = roundedSell === 0 ? '—' : `${roundedSell.toLocaleString('tr-TR')}`;
-
             const placeholderIndicator = '<span class="price-change-indicator invisible"><i class="fas fa-caret-up"></i></span>';
             let buyChangeIndicator = placeholderIndicator;
             let sellChangeIndicator = placeholderIndicator;
-
             if (roundedBuy !== 0 && Object.keys(previousPrices).length > 0) {
                 const prevBuy = parseFloat(previousPrices[gold.key]?.buy);
                 if (prevBuy < roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
@@ -96,19 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (prevSell < roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
                 if (prevSell > roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-caret-down"></i></span>';
             }
-
-            const itemHTML = `
-                <div class="gold-list-item">
-                    <span class="col-birim">${gold.name}</span>
-                    <span class="col-alis">${displayBuy} ${buyChangeIndicator}</span>
-                    <span class="col-satis">${displaySell} ${sellChangeIndicator}</span>
-                </div>
-            `;
+            const itemHTML = `<div class="gold-list-item"><span class="col-birim">${gold.name}</span><span class="col-alis">${displayBuy} ${buyChangeIndicator}</span><span class="col-satis">${displaySell} ${sellChangeIndicator}</span></div>`;
             pricesList.innerHTML += itemHTML;
             newPrices[gold.key] = { buy: roundedBuy.toFixed(2), sell: roundedSell.toFixed(2) };
         });
-
-        // HATA 2 DÜZELTİLDİ: Bu kod bloğu doğru yere, renderPrices sonuna taşındı.
         previousPrices = newPrices;
         if (converterOverlay.classList.contains('visible')) {
             calculateConversion();
@@ -171,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
     
-    // --- ÇEVİRİCİ FONKSİYONLARI ---
     function populateConverterDropdown() {
         goldSelect.innerHTML = '';
         goldTypes.forEach(gold => {
@@ -190,15 +170,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const sellPrice = parseFloat(previousPrices[selectedGoldKey].sell);
             const totalBuy = quantity * buyPrice;
             const totalSell = quantity * sellPrice;
-            calculatedBuyPrice.textContent = `${totalBuy.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} TRY`;
-            calculatedSellPrice.textContent = `${totalSell.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} TRY`;
+            calculatedBuyPrice.textContent = `${totalBuy.toLocaleString('tr-TR')} TRY`;
+            calculatedSellPrice.textContent = `${totalSell.toLocaleString('tr-TR')} TRY`;
         } else {
             calculatedBuyPrice.textContent = '---';
             calculatedSellPrice.textContent = '---';
         }
     }
 
-    // --- TÜM OLAY DİNLEYİCİLERİ (EVENT LISTENERS) ---
     settingsButton.addEventListener('click', () => {
         renderMultiplierInputs();
         settingsOverlay.classList.add('visible');
@@ -223,50 +202,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     saveMultipliersButton.addEventListener('click', saveMultipliers);
     manualRefreshButton.addEventListener('click', () => { clearInterval(refreshInterval), refreshTimerSpan.textContent = "Yenileniyor...", fetchGoldPrices() });
-
-    // HATA 1 DÜZELTİLDİ: "Verileri Temizle" kodu doğru yere, ana bloğun içine taşındı.
-  clearDataButton.addEventListener('click', () => {
-    const isConfirmed = confirm('Emin misiniz? Kayıtlı çarpanlar dahil tüm uygulama verileri silinecek ve sayfa yenilenecektir. Bu işlem geri alınamaz.');
-
-    if (isConfirmed) {
-        console.log('Veri temizleme işlemi başlatıldı...');
-
-        // 1. Service Worker kaydını sil
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
-                }
-                console.log('Service Worker kayıtları silindi.');
-            });
+    
+    clearDataButton.addEventListener('click', () => {
+        const isConfirmed = confirm('Emin misiniz? Kayıtlı çarpanlar dahil tüm uygulama verileri silinecek ve sayfa yenilenecektir. Bu işlem geri alınamaz.');
+        if (isConfirmed) {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) { registration.unregister(); }
+                });
+            }
+            if (window.caches) {
+                caches.keys().then(function(names) {
+                    for (let name of names) { caches.delete(name); }
+                });
+            }
+            localStorage.removeItem('goldMultipliers');
+            setTimeout(() => {
+                alert('Tüm uygulama verileri başarıyla temizlendi. Sayfa şimdi yeniden yüklenecek.');
+                window.location.reload();
+            }, 500);
         }
+    });
 
-        // 2. Tüm önbelleği (cache) temizle
-        if (window.caches) {
-            caches.keys().then(function(names) {
-                for (let name of names) {
-                    caches.delete(name);
-                }
-                console.log('Tüm önbellek silindi.');
-            });
-        }
-
-        // 3. Kayıtlı çarpanları (localStorage) daha hedefli bir şekilde temizle
-        localStorage.removeItem('goldMultipliers');
-        console.log('Kaydedilen çarpanlar (goldMultipliers) silindi.');
-
-        // 4. Kullanıcıyı bilgilendir ve sayfayı küçük bir gecikmeyle yeniden yükle
-        // Bu gecikme, tüm silme işlemlerinin tamamlanmasına olanak tanır.
-        setTimeout(() => {
-            alert('Tüm uygulama verileri başarıyla temizlendi. Sayfa şimdi yeniden yüklenecek.');
-            window.location.reload();
-        }, 500); // Yarım saniye bekle
-        
-    } else {
-        console.log('Veri temizleme işlemi iptal edildi.');
-    }
-});
-    // --- UYGULAMAYI BAŞLATAN FONKSİYONLAR ---
     initializeMultipliers();
     fetchGoldPrices();
     updateDateTime();
