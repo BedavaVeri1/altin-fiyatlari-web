@@ -308,3 +308,7 @@ body {
         font-size: 0.8rem;
     }
 }
+/* Yöneticiye özel butonları varsayılan olarak gizle */
+.admin-only {
+    display: none;
+}

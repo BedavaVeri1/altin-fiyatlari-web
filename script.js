@@ -178,10 +178,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- YÖNETİCİ KONTROLÜ VE BUTON OLAYLARI ---
+
+    // Yöneticinin giriş yapıp yapmadığını takip etmek için bir değişken
+    let isAdmin = false;
+
+    // Ayarlar butonuna tıklandığında...
     settingsButton.addEventListener('click', () => {
-        renderMultiplierInputs();
-        settingsOverlay.classList.add('visible');
+        // Eğer kullanıcı zaten yönetici olarak giriş yapmışsa, paneli direkt aç
+        if (isAdmin) {
+            renderMultiplierInputs();
+            settingsOverlay.classList.add('visible');
+            return; // Fonksiyonu burada bitir
+        }
+
+        // Eğer giriş yapılmamışsa, şifre sor
+        const adminPassword = "sifre1234"; // Buraya kendi gizli şifrenizi yazın
+        const enteredPassword = prompt("Yönetici paneline erişmek için şifreyi girin:");
+
+        // Şifre doğruysa...
+        if (enteredPassword === adminPassword) {
+            console.log("Yönetici girişi başarılı.");
+            alert("Yönetici olarak giriş yapıldı.");
+            
+            // Yönetici durumunu güncelle
+            isAdmin = true;
+
+            // Gizli olan diğer yönetici butonlarını görünür yap
+            const adminButtons = document.querySelectorAll('.admin-only');
+            adminButtons.forEach(button => {
+                button.style.display = 'inline-flex';
+            });
+            
+            // Ayarlar panelini aç
+            renderMultiplierInputs();
+            settingsOverlay.classList.add('visible');
+        
+        } else if (enteredPassword !== null && enteredPassword !== "") { // Kullanıcı "iptal"e basmadıysa veya boş bırakmadıysa
+            // Şifre yanlışsa uyar
+            alert("Yanlış şifre!");
+            console.log("Yanlış şifre girildi.");
+        }
     });
+    // Bu kodlar zaten sizde mevcut, sadece yerini göstermek için eklendi
+    closeSettingsButton.addEventListener('click', () => settingsOverlay.classList.remove("visible"));
+    settingsOverlay.addEventListener('click', function(e) { if (e.target === settingsOverlay) settingsOverlay.classList.remove("visible") });;
     closeSettingsButton.addEventListener('click', () => settingsOverlay.classList.remove("visible"));
     settingsOverlay.addEventListener('click', function(e) { if (e.target === settingsOverlay) settingsOverlay.classList.remove("visible") });
     
