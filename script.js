@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
     ];
 
+    // ... mevcut seçiciler
+    const refreshIcon = document.getElementById('refresh-icon');
+
+    // YENİ EKLENENLER
+    const converterButton = document.getElementById('toggle-converter');
+    const closeConverterButton = document.getElementById('close-converter');
+    const converterOverlay = document.getElementById('converter-overlay');
+    const quantityInput = document.getElementById('quantity-input');
+    const goldSelect = document.getElementById('gold-select-dropdown');
+    const calculatedSellPrice = document.getElementById('calculated-sell-price');
+    const calculatedBuyPrice = document.getElementById('calculated-buy-price');
     const pricesGrid = document.getElementById('gold-prices-grid');
     const settingsGrid = document.getElementById('multiplier-settings-grid');
     const refreshTimerSpan = document.getElementById('refresh-timer');
@@ -69,7 +80,14 @@ async function fetchGoldPrices() {
         refreshIcon.classList.remove('spinning'); // Yükleme animasyonunu durdur
 
     }, 1500); // 1500 milisaniye = 1.5 saniye bekle
-}
+    // ... renderPrices fonksiyonunun sonu
+        previousPrices = newPrices;
+
+        // EĞER ÇEVİRİCİ AÇIKSA HESAPLAMAYI GÜNCELLE
+        if(converterOverlay.classList.contains('visible')) {
+            calculateConversion();
+        }
+    } // renderPrices fonksiyonunun kapanış parantezi
     
     // --- BU FONKSİYON GÜNCELLENDİ ---
     function renderPrices(baseBuy, baseSell) {
@@ -190,4 +208,56 @@ async function fetchGoldPrices() {
     fetchGoldPrices();
     updateDateTime();
     setInterval(updateDateTime, 1000);
+    // --- ÇEVİRİCİ FONKSİYONELLİĞİ ---
+
+    // 1. Dropdown menüsünü goldTypes dizisindeki verilerle doldur
+    function populateConverterDropdown() {
+        goldTypes.forEach(gold => {
+            const option = document.createElement('option');
+            option.value = gold.key;
+            option.textContent = gold.name;
+            goldSelect.appendChild(option);
+        });
+    }
+
+    // 2. Hesaplama fonksiyonu
+    function calculateConversion() {
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const selectedGoldKey = goldSelect.value;
+
+        // Fiyatları en güncel 'previousPrices' objesinden al
+        if (previousPrices[selectedGoldKey]) {
+            const buyPrice = parseFloat(previousPrices[selectedGoldKey].buy);
+            const sellPrice = parseFloat(previousPrices[selectedGoldKey].sell);
+
+            const totalBuy = quantity * buyPrice;
+            const totalSell = quantity * sellPrice;
+
+            calculatedBuyPrice.textContent = `${totalBuy.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} TRY`;
+            calculatedSellPrice.textContent = `${totalSell.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} TRY`;
+        } else {
+             calculatedBuyPrice.textContent = '---';
+             calculatedSellPrice.textContent = '---';
+        }
+    }
+
+    // 3. Paneli açma/kapama olayları
+    converterButton.addEventListener('click', () => {
+        calculateConversion(); // Paneli açarken ilk hesaplamayı yap
+        converterOverlay.classList.add('visible');
+    });
+
+    closeConverterButton.addEventListener('click', () => converterOverlay.classList.remove('visible'));
+    converterOverlay.addEventListener('click', (e) => {
+        if (e.target === converterOverlay) {
+            converterOverlay.classList.remove('visible');
+        }
+    });
+
+    // 4. Miktar veya birim değiştiğinde hesaplamayı yeniden yap
+    quantityInput.addEventListener('input', calculateConversion);
+    goldSelect.addEventListener('change', calculateConversion);
+
+    // Dropdown'ı sayfa yüklendiğinde doldur
+    populateConverterDropdown();
 });
