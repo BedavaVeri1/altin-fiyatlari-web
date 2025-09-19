@@ -101,18 +101,21 @@ function renderPrices(baseBuy, baseSell) {
         const roundedSell = Math.ceil(rawSell);
         let displayBuy = roundedBuy === 0 ? '—' : `${roundedBuy.toLocaleString('tr-TR')}`;
         let displaySell = roundedSell === 0 ? '—' : `${roundedSell.toLocaleString('tr-TR')}`;
-        let buyChangeIndicator = '';
-        let sellChangeIndicator = '';
+        
+        // --- DEĞİŞİKLİK BURADA BAŞLIYOR ---
+        // Varsayılan olarak, görünmez bir yer tutucu ikon belirleyelim
+        const placeholderIndicator = '<span class="price-change-indicator invisible"><i class="fas fa-caret-up"></i></span>';
+        let buyChangeIndicator = placeholderIndicator;
+        let sellChangeIndicator = placeholderIndicator;
+        // --- DEĞİŞİKLİK BURADA BİTİYOR ---
 
         if (roundedBuy !== 0 && Object.keys(previousPrices).length > 0) {
             const prevBuy = parseFloat(previousPrices[gold.key]?.buy);
-            // İkonları değiştir (fa-caret-up / fa-caret-down)
             if (prevBuy < roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
             if (prevBuy > roundedBuy) buyChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-caret-down"></i></span>';
         }
         if (roundedSell !== 0 && Object.keys(previousPrices).length > 0) {
             const prevSell = parseFloat(previousPrices[gold.key]?.sell);
-            // İkonları değiştir (fa-caret-up / fa-caret-down)
             if (prevSell < roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-up"><i class="fas fa-caret-up"></i></span>';
             if (prevSell > roundedSell) sellChangeIndicator = '<span class="price-change-indicator price-down"><i class="fas fa-caret-down"></i></span>';
         }

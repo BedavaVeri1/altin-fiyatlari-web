@@ -256,3 +256,7 @@ body {
     align-items: flex-start;
     padding-top: 5vh; /* Ekranın biraz altında başlasın */
 }
+/* Fiyat değişmediğinde hizalamayı korumak için görünmez ikon stili */
+.price-change-indicator.invisible {
+    visibility: hidden;
+}
