@@ -225,29 +225,47 @@ document.addEventListener('DOMContentLoaded', function() {
     manualRefreshButton.addEventListener('click', () => { clearInterval(refreshInterval), refreshTimerSpan.textContent = "Yenileniyor...", fetchGoldPrices() });
 
     // HATA 1 DÜZELTİLDİ: "Verileri Temizle" kodu doğru yere, ana bloğun içine taşındı.
-    clearDataButton.addEventListener('click', () => {
-        const isConfirmed = confirm('Emin misiniz? Kayıtlı çarpanlar dahil tüm uygulama verileri silinecek ve sayfa yenilenecektir. Bu işlem geri alınamaz.');
-        if (isConfirmed) {
-            console.log('Veri temizleme işlemi başlatıldı...');
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for (let registration of registrations) {
-                        registration.unregister();
-                    }
-                });
-            }
-            if (window.caches) {
-                caches.keys().then(function(names) {
-                    for (let name of names) {
-                        caches.delete(name);
-                    }
-                });
-            }
-            localStorage.clear();
+  clearDataButton.addEventListener('click', () => {
+    const isConfirmed = confirm('Emin misiniz? Kayıtlı çarpanlar dahil tüm uygulama verileri silinecek ve sayfa yenilenecektir. Bu işlem geri alınamaz.');
+
+    if (isConfirmed) {
+        console.log('Veri temizleme işlemi başlatıldı...');
+
+        // 1. Service Worker kaydını sil
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+                console.log('Service Worker kayıtları silindi.');
+            });
+        }
+
+        // 2. Tüm önbelleği (cache) temizle
+        if (window.caches) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+                console.log('Tüm önbellek silindi.');
+            });
+        }
+
+        // 3. Kayıtlı çarpanları (localStorage) daha hedefli bir şekilde temizle
+        localStorage.removeItem('goldMultipliers');
+        console.log('Kaydedilen çarpanlar (goldMultipliers) silindi.');
+
+        // 4. Kullanıcıyı bilgilendir ve sayfayı küçük bir gecikmeyle yeniden yükle
+        // Bu gecikme, tüm silme işlemlerinin tamamlanmasına olanak tanır.
+        setTimeout(() => {
             alert('Tüm uygulama verileri başarıyla temizlendi. Sayfa şimdi yeniden yüklenecek.');
             window.location.reload();
-        }
-    });
+        }, 500); // Yarım saniye bekle
+        
+    } else {
+        console.log('Veri temizleme işlemi iptal edildi.');
+    }
+});
 
     // --- UYGULAMAYI BAŞLATAN FONKSİYONLAR ---
     initializeMultipliers();
