@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const fullscreenButton = document.getElementById('toggle-fullscreen');
     const settingsOverlay = document.getElementById('settings-overlay');
     const lastUpdatedSpan = document.getElementById('last-updated');
-    const refreshIcon = document.getElementById('refresh-icon');
 
     let previousPrices = {};
     let multipliers = {};
